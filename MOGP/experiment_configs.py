@@ -1,96 +1,23 @@
 
 EXPERIMENT_CONFIGS = {
-    # Default (Independent) - no specific rank
-    "independent": {
-        "model_class": "IndependentMultiTaskGPModel",
-        "params": {"nu": 0.5},
-        "description": "Independent multitask GP (non-separable)"
+    # Experiment 1: 6 Matern kernels with rank 1
+    "lcm_6matern_rank1": {
+        "model_class": "LCM6MaternRank1Model",
+        "params": {},
+        "description": "LCM with 6 Matern kernels (nu=0.5) and rank 1"
     },
     
-    # Matern 0.5 with ranks 1-6
-    "matern05_rank1": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 1, "nu": 0.5},
-        "description": "LCM with Matern 0.5, rank 1"
-    },
-    "matern05_rank2": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 2, "nu": 0.5},
-        "description": "LCM with Matern 0.5, rank 2"
-    },
-    "matern05_rank3": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 3, "nu": 0.5},
-        "description": "LCM with Matern 0.5, rank 3"
-    },
-    "matern05_rank4": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 4, "nu": 0.5},
-        "description": "LCM with Matern 0.5, rank 4"
-    },
-    "matern05_rank5": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 5, "nu": 0.5},
-        "description": "LCM with Matern 0.5, rank 5"
-    },
-    "matern05_rank6": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 6, "nu": 0.5},
-        "description": "LCM with Matern 0.5, rank 6"
+    # Experiment 2: 1 Matern kernel with rank 6
+    "lcm_1matern_rank6": {
+        "model_class": "LCM1MaternRank6Model",
+        "params": {},
+        "description": "LCM with 1 Matern kernel (nu=0.5) and rank 6"
     },
     
-    # Matern 1.5 with top 3 ranks from Matern 0.5
-    "matern15_rank2": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 2, "nu": 1.5},
-        "description": "LCM with Matern 1.5, rank 2"
-    },
-    "matern15_rank3": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 3, "nu": 1.5},
-        "description": "LCM with Matern 1.5, rank 3"
-    },
-    "matern15_rank4": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 4, "nu": 1.5},
-        "description": "LCM with Matern 1.5, rank 4"
-    },
-    
-    # Matern 2.5 with top 3 ranks from Matern 0.5
-    "matern25_rank2": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 2, "nu": 2.5},
-        "description": "LCM with Matern 2.5, rank 2"
-    },
-    "matern25_rank3": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 3, "nu": 2.5},
-        "description": "LCM with Matern 2.5, rank 3"
-    },
-    "matern25_rank4": {
-        "model_class": "LCMMultiTaskGPModel",
-        "params": {"rank": 4, "nu": 2.5},
-        "description": "LCM with Matern 2.5, rank 4"
-    },
-    
-    # Mixed Matern 0.5/2.5 with rank 1
-    "mixed_matern_rank1": {
-        "model_class": "LCMMixedMaternModel",
-        "params": {"rank": 1},
-        "description": "LCM with mixed Matern 0.5/2.5, rank 1"
-    },
-    
-    # Mixed Matern 0.5/2.5 with rank 3
-    "mixed_matern_rank3": {
-        "model_class": "LCMMixedMaternModel",
-        "params": {"rank": 3},
-        "description": "LCM with mixed Matern 0.5/2.5, rank 3"
-    },
-    
-    # Matern 2.5 + Wendland with rank 3
-    "matern25_wendland_rank3": {
-        "model_class": "LCMMaternWendlandModel",
-        "params": {"rank": 3},
-        "description": "LCM with Matern 2.5 + Wendland, rank 3"
+    # Experiment 3: 2 Matern kernels with rank 3
+    "lcm_2matern_rank3": {
+        "model_class": "LCM2MaternRank3Model",
+        "params": {},
+        "description": "LCM with 2 Matern kernels (nu=0.5) and rank 3"
     }
 }

@@ -7,3 +7,16 @@ mipnerf360/*/depth/
 mipnerf360/*/gp/*
 !mipnerf360/*/gp/*.csv
 
+
+
+nerf_sythetic/flowers/depth/f.npy
+checkpoints/depth_anything_v2_vitl.pth
+nerf_sythetic/*/depth/
+!nerf_sythetic/*/gp/var_figure/
+!nerf_sythetic/*/gp/var_figure/*
+
+nerf_sythetic/*/gp/*
+!nerf_sythetic/*/gp/*.csv
+
+nerf_sythetic/*/images
+nerf_sythetic/*/sparse

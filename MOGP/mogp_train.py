@@ -29,12 +29,12 @@ RADIUS = 0.25
 DYNAMIC_MVNTS = 8
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
-TRAINING_ITERATIONS = 10
+TRAINING_ITERATIONS = 1000
 NUM_TASKS = 6
 LEARNING_RATE = 0.2
 WEIGHT_DECAY =1e-6 
 NU = 0.5
-images =["000012.JPG", "000013.JPG", "000011.JPG", "000010.JPG"]
+images = ["000094.png", "000000.png", "000016.png", "000093.png"]
 
 #Set up output directory if it doesn't exist
 GP_OUTPUT_DIR = os.path.join(BASE_DIR, "gp")
@@ -56,7 +56,7 @@ def load_image_order_from_txt(images_txt_path):
             if not ln or ln.startswith('#'): 
                 continue
             p = ln.split()
-            if p[0].isdigit() and len(p) >= 10:
+            if p[0].isdigit() and len(p) == 10:
                 order.append(p[9])
     return order
 
@@ -91,7 +91,7 @@ def load_points3D(file_path):
             parts = line.split()
             point_id = int(parts[0])
             x, y, z = map(float, parts[1:4])
-            r, g, b = map(int, parts[4:7])
+            r, g, b = map(lambda x: int(float(x)), parts[4:7])
             points3d_dict[point_id] = [x, y, z, r / 255.0, g / 255.0, b / 255.0]
     return points3d_dict
 

@@ -15,6 +15,7 @@ RADIUS = 0.4
 DYNAMIC_MVNTS = 10
 THRESHOLD = 50
 
+images = ["000094.png"] #Pick the best performing image
 #Add functions from mogp_train
 def load_image_order_from_txt(images_txt_path):
     order = []
@@ -24,7 +25,7 @@ def load_image_order_from_txt(images_txt_path):
             if not ln or ln.startswith('#'): 
                 continue
             p = ln.split()
-            if p[0].isdigit() and len(p) >= 10:
+            if p[0].isdigit() and len(p) == 10:
                 order.append(p[9])
     return order
 
@@ -96,6 +97,10 @@ def load_points3D(file_path):
 
 
 def update_images_txt_optimized(images_txt_path, predictions):
+    # Check if file exists
+    if not os.path.exists(images_txt_path):
+        raise FileNotFoundError(f"Target file does not exist: {images_txt_path}")
+    
     # Read the entire file content
     with open(images_txt_path, 'r') as file:
         lines = file.readlines()
@@ -262,7 +267,7 @@ print(f"Depth range: {min_depth:.3f} to {max_depth:.3f}")
 #     top_image_names = json.load(f)
 
 #images = ["000115.JPG", "000101.JPG", "000079.JPG", "000072.JPG"]
-images = ["000115.JPG"]
+
 
 for image_name in images:
     print(f"Processing image: {image_name}")
@@ -349,8 +354,10 @@ for image_name in data_by_image_new.keys():
         print(f"  No test data for {image_name}, skipping...")
 
 # Update pixel-to-point/images.txt with all new correspondences
-images_txt_path =PIXEL_TO_POINT_IMAGES
+images_txt_path = PIXEL_TO_POINT_IMAGES
 
+print(f"Writing to: {images_txt_path}")
+print(f"File exists: {os.path.exists(images_txt_path)}")
 
 if predictions:
     update_images_txt_optimized(images_txt_path, predictions)

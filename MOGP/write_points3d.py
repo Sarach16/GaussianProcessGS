@@ -5,6 +5,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from config import POINTS3D_PATH, IMAGES_TXT_PATH, DEPTH_FILE_PATH, BASE_DIR, TEST_VAR, PREDICT_MEAN, PIXEL_TO_POINT_POINTS3D
 import os
 
+images = ["000094.png"]
+
 # Add functions from mogp_train
 def load_image_order_from_txt(images_txt_path):
     order = []
@@ -58,7 +60,7 @@ def load_points3D(file_path):
             parts = line.split()
             point_id = int(parts[0])
             x, y, z = map(float, parts[1:4])
-            r, g, b = map(int, parts[4:7])
+            r, g, b = map(lambda v: int(float(v)), parts[4:7])
             points3d_dict[point_id] = [x, y, z, r / 255.0, g / 255.0, b / 255.0]
     return points3d_dict
 
@@ -233,7 +235,7 @@ if __name__ == "__main__":
     #     top_image_names = json.load(f)
 
     #images = ["000115.JPG", "000101.JPG", "000079.JPG", "000072.JPG"]
-    images = ["000115.JPG"]
+  
 
     for image_name in images:
         print(f"Processing image: {image_name}")

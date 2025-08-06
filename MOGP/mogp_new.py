@@ -17,10 +17,25 @@ from MOGP.gp_models import (
     LCMMultiTaskGPModel, 
     IndependentMultiTaskGPModel, 
     LCMMixedMaternModel,
-    LCMMaternWendlandModel
+    LCMMaternWendlandModel,
+    LCM6MaternRank1Model,
+    LCM1MaternRank6Model,
+    LCM2MaternRank3Model
 )
 from MOGP.experiment_configs import EXPERIMENT_CONFIGS
 from config import POINTS3D_PATH, DEPTH_FILE_PATH, IMAGES_TXT_PATH, BASE_DIR, SCENE_NAME
+
+# Add default experiment to configurations
+DEFAULT_EXPERIMENT_CONFIG = {
+    "independent": {
+        "model_class": "IndependentMultiTaskGPModel",
+        "params": {"nu": 0.5},
+        "description": "Independent multitask GP (non-separable)"
+    }
+}
+
+# Combine default with new experiments
+ALL_EXPERIMENT_CONFIGS = {**DEFAULT_EXPERIMENT_CONFIG, **EXPERIMENT_CONFIGS}
 
 # Constants
 DTYPE = torch.float64
@@ -30,14 +45,14 @@ RADIUS = 0.25
 DYNAMIC_MVNTS = 8
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
-NUM_EPOCHS = 10
+NUM_EPOCHS = 100
 NUM_TASKS = 6
 RANK = 4
 NUM_INDUCING = 200
 LR = 0.2
 WEIGHT_DECAY = 1e-6 
 NU = 0.5
-images = ["000115.JPG", "000117.JPG", "000079.JPG", "000072.JPG"]
+images = ["000012.JPG", "000013.JPG", "000011.JPG", "000010.JPG"]
 
 # Set up output directory
 GP_OUTPUT_DIR = os.path.join(BASE_DIR, "gp")
@@ -81,7 +96,7 @@ def load_points3D(file_path):
             parts = line.split()
             point_id = int(parts[0])
             x, y, z = map(float, parts[1:4])
-            r, g, b = map(int, parts[4:7])
+            r, g, b = map(lambda x: int(float(x)), parts[4:7])
             points3d_dict[point_id] = [x, y, z, r / 255.0, g / 255.0, b / 255.0]
     return points3d_dict
 
@@ -210,7 +225,10 @@ def run_experiment(experiment_name, model_class_name, model_params, images, vali
     "LCMMultiTaskGPModel": LCMMultiTaskGPModel,
     "IndependentMultiTaskGPModel": IndependentMultiTaskGPModel,
     "LCMMixedMaternModel": LCMMixedMaternModel,
-    "LCMMaternWendlandModel": LCMMaternWendlandModel
+    "LCMMaternWendlandModel": LCMMaternWendlandModel,
+    "LCM6MaternRank1Model": LCM6MaternRank1Model,
+    "LCM1MaternRank6Model": LCM1MaternRank6Model,
+    "LCM2MaternRank3Model": LCM2MaternRank3Model
 }
 
     ModelClass = model_classes[model_class_name]
@@ -366,7 +384,7 @@ def main():
     all_results = []
     all_models_info = {}
     
-    for exp_name, exp_config in EXPERIMENT_CONFIGS.items():
+    for exp_name, exp_config in ALL_EXPERIMENT_CONFIGS.items():
         print(f"\n{'='*80}")
         print(f"RUNNING EXPERIMENT: {exp_name}")
         print(f"Description: {exp_config['description']}")
@@ -390,7 +408,7 @@ def main():
     
     # Create summary of all experiments
     summary_df = pd.DataFrame(all_results)
-    summary_csv_path = os.path.join(GP_OUTPUT_DIR, f"{SCENE_NAME}_all_experiments_summary.csv")
+    summary_csv_path = os.path.join(GP_OUTPUT_DIR, f"{SCENE_NAME}_all_experiments_summary_version2.csv")
     summary_df.to_csv(summary_csv_path, index=False)
     
     print(f"\nAll experiments summary saved to: {summary_csv_path}")
@@ -405,7 +423,7 @@ def main():
     # Show performance summary first
     print("EXPERIMENT PERFORMANCE SUMMARY:")
     print("-" * 50)
-    for exp in EXPERIMENT_CONFIGS.keys():
+    for exp in ALL_EXPERIMENT_CONFIGS.keys():
         exp_results = summary_df[summary_df['experiment'] == exp]
         if not exp_results.empty:
             print(f"{exp}:")
@@ -443,7 +461,7 @@ def main():
     
     # Step 1: Choose experiment
     print("Available experiments:")
-    for i, exp_name in enumerate(EXPERIMENT_CONFIGS.keys()):
+    for i, exp_name in enumerate(ALL_EXPERIMENT_CONFIGS.keys()):
         exp_results = summary_df[summary_df['experiment'] == exp_name]
         if not exp_results.empty:
             avg_r2 = exp_results['r2_total'].mean()
@@ -451,11 +469,11 @@ def main():
             print(f"{i+1}. {exp_name}")
             print(f"   Avg R²: {avg_r2:.3f}, Best R²: {best_r2:.3f}")
     
-    exp_choice = input(f"\nEnter experiment number (1-{len(EXPERIMENT_CONFIGS)}) or 'skip': ")
+    exp_choice = input(f"\nEnter experiment number (1-{len(ALL_EXPERIMENT_CONFIGS)}) or 'skip': ")
     
     if exp_choice.lower() != 'skip':
         exp_idx = int(exp_choice) - 1
-        selected_exp = list(EXPERIMENT_CONFIGS.keys())[exp_idx]
+        selected_exp = list(ALL_EXPERIMENT_CONFIGS.keys())[exp_idx]
         
         # Step 2: Choose image
         print(f"\nImages for {selected_exp}:")

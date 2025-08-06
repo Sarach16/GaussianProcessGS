@@ -33,6 +33,8 @@ LEARNING_RATE = 0.1
 WEIGHT_DECAY =1e-6 
 NU = 0.5
 
+images = ["000094.png"]#Pick best performing image
+
 # Load and prepare data and file paths
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 file_path_points3d = POINTS3D_PATH
@@ -212,7 +214,7 @@ max_depth = np.max(all_depths)
 
 
 #images = ["000115.JPG", "000101.JPG", "000079.JPG", "000072.JPG"]
-images = ["000115.JPG"]
+
 
 
 

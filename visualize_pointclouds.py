@@ -51,7 +51,7 @@ def load_point_cloud_from_colmap(file_path):
         print(f"Error loading {file_path}: {e}")
         return None
 
-def visualize_sparse_only(scene_name, base_path="mipnerf360"):
+def visualize_sparse_only(scene_name, base_path="nerf_sythetic"):
     """Visualize sparse point cloud with original RGB colors"""
     sparse_path = os.path.join(base_path, scene_name, "sparse", "0", "points3D.txt")
     
@@ -89,9 +89,13 @@ def visualize_sparse_only(scene_name, base_path="mipnerf360"):
     vis.run()
     vis.destroy_window()
 
-def visualize_densified_only(scene_name, base_path="mipnerf360"):
+def visualize_densified_only(scene_name, base_path="nerf_sythetic"):
     """Visualize densified point cloud with original RGB colors"""
-    densified_path = os.path.join(base_path, scene_name, f"pixel-to-point-{scene_name}", "points3D.txt")
+    densified_path = os.path.join(base_path, scene_name, f"pixel-to-point-{scene_name}", "0", "points3D.txt")
+    
+    # If that doesn't exist, try the path without subdirectory
+    if not os.path.exists(densified_path):
+        densified_path = os.path.join(base_path, scene_name, f"pixel-to-point-{scene_name}", "points3D.txt")
     
     print(f"Loading densified point cloud from: {densified_path}")
     densified_pcd = load_point_cloud_from_colmap(densified_path)
@@ -128,12 +132,17 @@ def visualize_densified_only(scene_name, base_path="mipnerf360"):
     vis.destroy_window()
 
 
-def visualize_point_clouds_comparison(scene_name, base_path="mipnerf360"):
+def visualize_point_clouds_comparison(scene_name, base_path="nerf_sythetic"):
     """Visualize sparse vs densified point clouds side by side"""
     
     # Construct file paths
     sparse_path = os.path.join(base_path, scene_name, "sparse", "0", "points3D.txt")
-    densified_path = os.path.join(base_path, scene_name, f"pixel-to-point-{scene_name}", "points3D.txt")
+
+    densified_path = os.path.join(base_path, scene_name, f"pixel-to-point-{scene_name}", "0", "points3D.txt")
+    
+    # If that doesn't exist, try the original path
+    if not os.path.exists(densified_path):
+        densified_path = os.path.join(base_path, scene_name, f"pixel-to-point-{scene_name}", "points3D.txt")
     
     print(f"Checking file paths:")
     print(f"Sparse: {sparse_path} - Exists: {os.path.exists(sparse_path)}")
@@ -221,7 +230,7 @@ def visualize_point_clouds_comparison(scene_name, base_path="mipnerf360"):
 def main():
     parser = argparse.ArgumentParser(description="Visualize point clouds")
     parser.add_argument("--scene", type=str, default="flowers", help="Scene name to visualize")
-    parser.add_argument("--base-path", type=str, default="mipnerf360", help="Base path to dataset")
+    parser.add_argument("--base-path", type=str, default="nerf_sythetic", help="Base path to dataset")
     parser.add_argument("--type", type=str, choices=["sparse", "densified", "compare"], default="compare",
                         help="Type of visualization: sparse, densified, or compare")
     

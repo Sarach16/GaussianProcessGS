@@ -89,3 +89,70 @@ class LCMMaternWendlandModel(gpytorch.models.ExactGP):
         covar_x = self.covar_module(x)
         return MultitaskMultivariateNormal(mean_x, covar_x)
 
+# New model classes for the three experiments
+class LCM6MaternRank1Model(gpytorch.models.ExactGP):
+    """
+    LCM model with 6 Matern kernels (nu=0.5) and rank 1
+    """
+    def __init__(self, train_x, train_y, likelihood, num_tasks):
+        super().__init__(train_x, train_y, likelihood)
+        self.mean_module = gpytorch.means.MultitaskMean(ConstantMean(), num_tasks=num_tasks)
+        
+        # 6 Matern kernels with nu=0.5
+        base_kernels = [
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1]),   # first latent kernel
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1]),   # second latent kernel
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1]),   # third latent kernel
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1]),   # fourth latent kernel
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1]),   # fifth latent kernel
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1])    # sixth latent kernel
+        ]
+        
+        self.covar_module = LCMKernel(base_kernels, num_tasks=num_tasks, rank=1)
+    
+    def forward(self, x):
+        mean_x = self.mean_module(x)
+        covar_x = self.covar_module(x)
+        return MultitaskMultivariateNormal(mean_x, covar_x)
+
+class LCM1MaternRank6Model(gpytorch.models.ExactGP):
+    """
+    LCM model with 1 Matern kernel (nu=0.5) and rank 6
+    """
+    def __init__(self, train_x, train_y, likelihood, num_tasks):
+        super().__init__(train_x, train_y, likelihood)
+        self.mean_module = gpytorch.means.MultitaskMean(ConstantMean(), num_tasks=num_tasks)
+        
+        # 1 Matern kernel with nu=0.5
+        base_kernels = [
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1])
+        ]
+        
+        self.covar_module = LCMKernel(base_kernels, num_tasks=num_tasks, rank=6)
+    
+    def forward(self, x):
+        mean_x = self.mean_module(x)
+        covar_x = self.covar_module(x)
+        return MultitaskMultivariateNormal(mean_x, covar_x)
+
+class LCM2MaternRank3Model(gpytorch.models.ExactGP):
+    """
+    LCM model with 2 Matern kernels (nu=0.5) and rank 3
+    """
+    def __init__(self, train_x, train_y, likelihood, num_tasks):
+        super().__init__(train_x, train_y, likelihood)
+        self.mean_module = gpytorch.means.MultitaskMean(ConstantMean(), num_tasks=num_tasks)
+        
+        # 2 Matern kernels with nu=0.5
+        base_kernels = [
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1]),   # first latent kernel
+            MaternKernel(nu=0.5, ard_num_dims=train_x.shape[-1])    # second latent kernel
+        ]
+        
+        self.covar_module = LCMKernel(base_kernels, num_tasks=num_tasks, rank=3)
+    
+    def forward(self, x):
+        mean_x = self.mean_module(x)
+        covar_x = self.covar_module(x)
+        return MultitaskMultivariateNormal(mean_x, covar_x)
+
