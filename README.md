@@ -1,3 +1,94 @@
+# GP-GS Extension: LMC-Based Multi-Output Gaussian Processes for Enhanced 3D Gaussian Splatting
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
+[Original GP-GS Paper](https://arxiv.org/pdf/2502.02283)
+
+## Overview
+
+This project builds on **GP-GS: Gaussian Processes for Enhanced 3D Gaussian Splatting**, a framework that improves 3D Gaussian Splatting by densifying sparse Structure-from-Motion (SfM) point clouds with Multi-Output Gaussian Processes (MOGP).
+
+My work focused on understanding, reproducing, and extending this pipeline, with particular attention to using **Linear Model of Coregionalization (LMC)** to better capture correlations between spatial coordinates and RGB color channels during point cloud densification.
+
+### Pipeline Figures
+
+![Pipeline](assets/gpgs.drawio.png)
+![Pipeline Detail](assets/gpgs-Page-6.drawio.png)
+
+## My Contribution
+
+In this project, I worked on:
+
+- studying and reproducing the GP-GS pipeline
+- debugging setup and dependency issues in the codebase
+- adapting the environment to run correctly
+- exploring depth generation for scenes beyond the default example
+- experimenting with **LMC-based correlated-output Gaussian Processes**
+- comparing correlated-output modeling with independent-output baselines
+- documenting the workflow and implementation process more clearly
+
+This project was meaningful to me because it combined research, experimentation, and software engineering. It required reading technical papers, working through incomplete documentation, and making sense of a complex pipeline in practice.
+
+## Project Goal
+
+The goal of GP-GS is to improve the initialization of **3D Gaussian Splatting (3DGS)** by densifying sparse SfM point clouds before Gaussian optimization. Better point cloud initialization can improve reconstruction quality and novel view synthesis, especially in regions with limited structure or sparse coverage.
+
+My extension explores whether **correlated-output Gaussian Process models** can improve this densification step by modeling relationships between geometry and color rather than predicting each output independently.
+
+## Original GP-GS Abstract
+
+3D Gaussian Splatting has emerged as an efficient photorealistic novel view synthesis method. However, its reliance on sparse Structure-from-Motion (SfM) point clouds often limits scene reconstruction quality. GP-GS addresses this by using a multi-output Gaussian Process model to enable adaptive and uncertainty-guided densification of sparse SfM point clouds. GP-based predictions infer new candidate points from input 2D pixels and depth maps, and uncertainty estimates are used to filter noisy predictions. These densified point clouds provide higher-quality initial 3D Gaussians, improving reconstruction performance.
+
+## Pipeline
+
+The overall pipeline consists of:
+
+1. **Multi-view image input**
+2. **Depth estimation** using models such as Depth Anything
+3. **SfM reconstruction** to generate a sparse point cloud
+4. **Point cloud densification** using MOGP
+5. **Uncertainty-based filtering** to remove noisy predictions
+6. **3D Gaussian initialization and optimization**
+7. **Novel view rendering**
+
+
+## Technical Focus of My Work
+
+My technical focus was on the densification stage.
+
+The MOGP model takes pixel coordinates and depth values as input and predicts:
+- 3D position
+- RGB color information
+
+I explored how **LMC-based MOGPs** could better model cross-output dependencies, especially between spatial structure and appearance, compared with treating each output independently.
+
+This helped me better understand:
+- Gaussian Process modeling
+- multi-output regression
+- uncertainty-guided filtering
+- the role of point cloud quality in downstream rendering
+
+## Tech Stack
+
+- Python
+- GPyTorch
+- Matplotlib
+- 3D Gaussian Splatting
+- Multi-Output Gaussian Processes
+- COLMAP / SfM processing
+- Depth Anything V2
+- Conda
+
+## Local Setup
+
+```shell
+conda env create --file environment.yml
+conda activate GP-GS
+pip install gpytorch
+pip install matplotlib
+
+
+
 
 ### Running
 **MOGP**:
